@@ -84,29 +84,29 @@ ttk.Label(app, text="Select gender:").grid(
     column=0, row=1, padx=5, pady=5, sticky="w")
 gender_var = tk.StringVar(value="non-binary")
 genders = [("Male", "male"), ("Female", "female"),
-           ("Non-binary", "non-binary")]
+           ("Non-binary", "non-binary"), ("Any", None)]
 for i, (text, value) in enumerate(genders):
     ttk.Radiobutton(app, text=text, variable=gender_var, value=value).grid(
         column=1, row=1+i, padx=5, pady=2, sticky="w")
 
 # Number of names
 ttk.Label(app, text="Number of names:").grid(
-    column=0, row=4, padx=5, pady=5, sticky="w")
+    column=0, row=5, padx=5, pady=5, sticky="w")
 entry_count = ttk.Entry(app)
 entry_count.insert(0, "1")
-entry_count.grid(column=1, row=4, padx=0, pady=5)
+entry_count.grid(column=1, row=5, padx=0, pady=5)
 
 # Generate button
 ttk.Button(app, text="Generate", command=generate_names).grid(
-    column=0, row=5, columnspan=2, padx=5, pady=10)
+    column=0, row=6, columnspan=2, padx=5, pady=10)
 
 # Output text box
 output_text = tk.Text(app, height=10, width=40, state="disabled")
-output_text.grid(column=0, row=6, columnspan=2, padx=5, pady=5)
+output_text.grid(column=0, row=7, columnspan=2, padx=5, pady=5)
 
 # Copy button
 copy_button = ttk.Button(app, text="Copy", command=copy_text)
 copy_button.config(state="disabled")
-copy_button.grid(column=0, row=7, columnspan=2, padx=5, pady=10)
+copy_button.grid(column=0, row=8, columnspan=2, padx=5, pady=10)
 
 app.mainloop()
