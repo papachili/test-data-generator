@@ -140,25 +140,21 @@ class NameGenerator(tk.Frame):
                     "Warning",
                     f"Number exceeds the maximum allowed ({self.MAX_PEOPLE}). Setting to maximum."
                 )
-                count = self.MAX_PEOPLE
-                self.entry_count.set(0)
                 self.entry_count.set(self.MAX_PEOPLE)
                 return
             elif count <= 0:
                 messagebox.showerror(
-                    "Error",
-                    "Please enter a positive number."
-                )
+                    "Error", f"Please enter a positive number between 1 and {self.MAX_PEOPLE}")
+                self.entry_count.set(5)
                 return
-        except ValueError:
-            messagebox.showerror("Error", "Please enter a valid number.")
-            self.entry_count.set(0, tk.END)
-            entry_count.set(0, "1")
+        except Exception as e:
+            messagebox.showerror(
+                "Error", f"Please enter a positive number between 1 and {self.MAX_PEOPLE}")
+            self.entry_count.set(5)
             return
 
         action = self.action_var.get()
         gender = self.gender_var.get()
-        print(f"gender: {gender}")
 
         results = []
         for _ in range(count):
