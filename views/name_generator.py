@@ -80,6 +80,11 @@ class NameGenerator(tk.Frame):
             self.options_frame, from_=1, to=self.MAX_PEOPLE, textvariable=self.entry_count, width=10)
         num_spinbox.grid(row=2, column=1, columnspan=3, sticky="w", padx=5)
 
+        # Label for entry_count status messages
+        self.entry_count_label = tk.Label(
+            self.content_frame, text="")
+        self.entry_count_label.pack()
+
         # Generate button
         generate_btn = ttk.Button(
             self.content_frame,
@@ -136,20 +141,18 @@ class NameGenerator(tk.Frame):
         try:
             count = int(self.entry_count.get())
             if count > self.MAX_PEOPLE:
-                messagebox.showwarning(
-                    "Warning",
-                    f"Number exceeds the maximum allowed ({self.MAX_PEOPLE}). Setting to maximum."
-                )
+                message = f"Number exceeds the maximum allowed ({self.MAX_PEOPLE}). Setting to maximum."
+                self.show_entry_count_message(message)
                 self.entry_count.set(self.MAX_PEOPLE)
                 return
             elif count <= 0:
-                messagebox.showerror(
-                    "Error", f"Please enter a positive number between 1 and {self.MAX_PEOPLE}")
+                message = f"Please enter a positive number between 1 and {self.MAX_PEOPLE}"
+                self.show_entry_count_message(message)
                 self.entry_count.set(5)
                 return
         except Exception as e:
-            messagebox.showerror(
-                "Error", f"Please enter a positive number between 1 and {self.MAX_PEOPLE}")
+            message = f"Please enter a positive number between 1 and {self.MAX_PEOPLE}"
+            self.show_entry_count_message(message)
             self.entry_count.set(5)
             return
 
@@ -181,15 +184,21 @@ class NameGenerator(tk.Frame):
         if names:
             self.clipboard_clear()
             self.clipboard_append(names)
-            self.copy_reset_message_label.config(
-                text="Names copied to clipboard!", fg="green")
-            self.copy_reset_message_label.after(
-                2000, self.hide_copy_reset_message)  # hide after 2 seconds
-        else:
-            self.copy_reset_message_label.config(
-                text="No names to copy. Generate some names first.", fg="red")
-            self.copy_reset_message_label.after(
-                3000, self.hide_copy_reset_message)  # hide after 3 seconds
+            message = "Names copied to clipboard!"
+            self.show_copy_reset_message(message)
+
+    def show_entry_count_message(self, message, color="red"):
+        self.entry_count_label.config(text=message, fg=color)
+        self.entry_count_label.after(
+            2000, self.hide_entry_count_message)
+
+    def hide_entry_count_message(self):
+        self.entry_count_label.config(text="")
+
+    def show_copy_reset_message(self, message, color="green"):
+        self.copy_reset_message_label.config(text=message, fg=color)
+        self.copy_reset_message_label.after(
+            2000, self.hide_copy_reset_message)
 
     def hide_copy_reset_message(self):
         self.copy_reset_message_label.config(text="")

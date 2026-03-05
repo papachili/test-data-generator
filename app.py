@@ -7,7 +7,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Test Data Generator")
-        self.geometry("800x600")
+        self.geometry("800x700")
         self.configure_app()
 
         # Dictionary to hold frame classes
