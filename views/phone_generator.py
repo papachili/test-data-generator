@@ -1,37 +1,27 @@
 import tkinter as tk
 from tkinter import ttk
+from views.base_generator import BaseView
+from utils import generate_random_phone_number, MAX_AMOUNT, LOCALE_MAPPING_PHONE
 
 
-class PhoneGenerator(tk.Frame):
+class PhoneGenerator(BaseView):
     """Phone generator view"""
 
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
-        self.create_widgets()
+        super().__init__(parent, controller)
+        self.title_label['text'] = "Phone Generator"
+        self.create_additional_widgets()
 
-    def create_widgets(self):
-        """Create all widgets for phone generator"""
-        # Header
-        header_frame = tk.Frame(self)
-        header_frame.pack(fill="x", padx=20, pady=10)
+    def create_additional_widgets(self):
+        """Create additional widgets for phone generator"""
+        # Locale selection
+        default_locale_key = LOCALE_MAPPING_PHONE["en_GB"]
+        self.add_locale_option(default_locale_key, LOCALE_MAPPING_PHONE)
 
-        # Back button
-        back_btn = ttk.Button(
-            header_frame,
-            text="← Back",
-            command=lambda: self.controller.show_frame('MainMenu')
-        )
-        back_btn.pack(side="left")
-
-        # Title
-        title_label = tk.Label(
-            header_frame,
-            text="Phone Generator",
-            font=("Arial", 16, "bold")
-        )
-        title_label.pack(side="left", padx=20)
-
-    def on_show(self):
-        """Called when this frame is shown"""
-        pass
+        # Amount of names to generate
+        tk.Label(self.options_frame, text="Amount:").grid(
+            row=3, column=0, sticky="w", padx=5, pady=5)
+        self.entry_count = tk.IntVar(value=5)
+        num_spinbox = ttk.Spinbox(
+            self.options_frame, from_=1, to=MAX_AMOUNT, textvariable=self.entry_count, width=10)
+        num_spinbox.grid(row=3, column=1, columnspan=3, sticky="w", padx=5)

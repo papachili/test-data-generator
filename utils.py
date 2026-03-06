@@ -1,7 +1,9 @@
 import random
 from faker import Faker
 
-LOCALE_MAPPING = {
+MAX_AMOUNT = 9999  # maximum amount that can be generated at once
+
+LOCALE_MAPPING_NAME = {
     "ar_AA": "Arabic (Arabia)",
     "ar_DZ": "Arabic (Algeria)",
     "ar_PS": "Arabic (Palestine)",
@@ -87,6 +89,79 @@ LOCALE_MAPPING = {
     "zu_ZA": "Zulu (South Africa)"
 }
 
+LOCALE_MAPPING_PHONE = {
+    'sq_AL': 'Albanian',
+    'ar_AA': 'Arabic',
+    'ar_DZ': 'Arabic (Algeria)',
+    'ar_BH': 'Arabic (Bahrain)',
+    'ar_EG': 'Arabic (Egypt)',
+    'ar_JO': 'Arabic (Jordan)',
+    'ar_PS': 'Arabic (Palestine)',
+    'ar_SA': 'Arabic (Saudi Arabia)',
+    'ar_AE': 'Arabic (United Arab Emirates)',
+    'hy_AM': 'Armenian',
+    'az_AZ': 'Azerbaijani',
+    'bn_BD': 'Bengali',
+    'bs_BA': 'Bosnian',
+    'bg_BG': 'Bulgarian',
+    'zh_CN': 'Chinese (China)',
+    'zh_TW': 'Chinese (Taiwan)',
+    'hr_HR': 'Croatian',
+    'cs_CZ': 'Czech',
+    'da_DK': 'Danish',
+    'nl_BE': 'Dutch (Belgium)',
+    'nl_NL': 'Dutch (Netherlands)',
+    'en_AU': 'English (Australia)',
+    'en_CA': 'English (Canada)',
+    'en_GB': 'English (Great Britain)',
+    'en_IN': 'English (India)',
+    'en_IE': 'English (Ireland)',
+    'en_NZ': 'English (New Zealand)',
+    'en_TH': 'English (Thailand)',
+    'en_US': 'English (United States)',
+    'et_EE': 'Estonian',
+    'fi_FI': 'Finnish',
+    'fr_BE': 'French (Belgium)',
+    'fr_CA': 'French (Canada)',
+    'fr_FR': 'French (France)',
+    'fr_CH': 'French (Switzerland)',
+    'ka_GE': 'Georgian',
+    'de_AT': 'German (Austria)',
+    'de_DE': 'German (Germany)',
+    'de_CH': 'German (Switzerland)',
+    'el_GR': 'Greek',
+    'he_IL': 'Hebrew',
+    'hi_IN': 'Hindi',
+    'hu_HU': 'Hungarian',
+    'id_ID': 'Indonesian',
+    'it_IT': 'Italian',
+    'ja_JP': 'Japanese',
+    'ko_KR': 'Korean',
+    'lv_LV': 'Latvian',
+    'lt_LT': 'Lithuanian',
+    'ne_NP': 'Nepali',
+    'fa_IR': 'Persian',
+    'pl_PL': 'Polish',
+    'pt_BR': 'Portuguese (Brazil)',
+    'pt_PT': 'Portuguese (Portugal)',
+    'ro_RO': 'Romanian',
+    'ru_RU': 'Russian',
+    'sk_SK': 'Slovak',
+    'sl_SI': 'Slovenian',
+    'es_AR': 'Spanish (Argentina)',
+    'es_CL': 'Spanish (Chile)',
+    'es_CO': 'Spanish (Colombia)',
+    'es_MX': 'Spanish (Mexico)',
+    'es_ES': 'Spanish (Spain)',
+    'sv_SE': 'Swedish',
+    'ta_IN': 'Tamil',
+    'th_TH': 'Thai',
+    'tr_TR': 'Turkish',
+    'tw_GH': 'Twi (Ghana)',
+    'uk_UA': 'Ukrainian',
+    'vi_VN': 'Vietnamese'
+}
+
 
 def generate_random_name(sex=None, locale=None, include_title=False):
     fake = Faker(locale)
@@ -112,3 +187,9 @@ def generate_random_name(sex=None, locale=None, include_title=False):
 
         last_name = fake.last_name()
         return f"{first_name} {last_name}"
+
+
+def generate_random_phone_number(locale=None):
+    fake = Faker(locale)
+    phone_number = fake.phone_number()
+    print(phone_number)

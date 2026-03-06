@@ -1,14 +1,13 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from utils import generate_random_name, LOCALE_MAPPING
+from utils import generate_random_name, MAX_AMOUNT, LOCALE_MAPPING_NAME
 
 
 class NameGenerator(tk.Frame):
-    MAX_PEOPLE = 9999  # maximum number of people to generate
+    """Name generator view"""
 
     def __init__(self, parent, controller):
         super().__init__(parent)
-        self.parent = parent
         self.controller = controller
         self.create_widgets()
 
@@ -74,12 +73,13 @@ class NameGenerator(tk.Frame):
         tk.Label(self.options_frame, text="Region/Language").grid(
             row=2, column=0, padx=5, pady=5, sticky="w")
 
-        self.locale_var = tk.StringVar(value=LOCALE_MAPPING["en"])
+        self.locale_var = tk.StringVar(value=LOCALE_MAPPING_NAME["en"])
 
         locale_combo = ttk.Combobox(
             self.options_frame,
             textvariable=self.locale_var,
-            values=list(LOCALE_MAPPING.values()),  # All locale display values
+            # All locale display values
+            values=list(LOCALE_MAPPING_NAME.values()),
             state="readonly",  # Prevent typing, only selection
             width=25  # Adjust width as needed
         )
@@ -93,7 +93,7 @@ class NameGenerator(tk.Frame):
             row=3, column=0, sticky="w", padx=5, pady=5)
         self.entry_count = tk.IntVar(value=5)
         num_spinbox = ttk.Spinbox(
-            self.options_frame, from_=1, to=self.MAX_PEOPLE, textvariable=self.entry_count, width=10)
+            self.options_frame, from_=1, to=MAX_AMOUNT, textvariable=self.entry_count, width=10)
         num_spinbox.grid(row=3, column=1, columnspan=3, sticky="w", padx=5)
 
         # Label for entry_count status messages
@@ -158,18 +158,18 @@ class NameGenerator(tk.Frame):
         """Generate names based on selected options and display in text box"""
         try:
             count = int(self.entry_count.get())
-            if count > self.MAX_PEOPLE:
-                message = f"Number exceeds the maximum allowed ({self.MAX_PEOPLE}). Setting to maximum."
+            if count > MAX_AMOUNT:
+                message = f"Number exceeds the maximum allowed ({MAX_AMOUNT}). Setting to maximum."
                 self.show_entry_count_message(message)
-                self.entry_count.set(self.MAX_PEOPLE)
+                self.entry_count.set(MAX_AMOUNT)
                 return
             elif count <= 0:
-                message = f"Please enter a positive number between 1 and {self.MAX_PEOPLE}"
+                message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
                 self.show_entry_count_message(message)
                 self.entry_count.set(5)
                 return
         except Exception as e:
-            message = f"Please enter a positive number between 1 and {self.MAX_PEOPLE}"
+            message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
             self.show_entry_count_message(message)
             self.entry_count.set(5)
             return
@@ -205,7 +205,7 @@ class NameGenerator(tk.Frame):
         # Get the selected display value
         selected_display = self.locale_var.get()
 
-        for key, value in LOCALE_MAPPING.items():
+        for key, value in LOCALE_MAPPING_NAME.items():
             if value == selected_display:
                 self.current_locale_key = key
                 break
