@@ -1,10 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from utils import generate_random_name
+from utils import generate_random_name, LOCALE_MAPPING
 
 
 class NameGenerator(tk.Frame):
-    """Name generator view"""
     MAX_PEOPLE = 9999  # maximum number of people to generate
 
     def __init__(self, parent, controller):
@@ -55,7 +54,6 @@ class NameGenerator(tk.Frame):
         # Gender selection
         tk.Label(self.options_frame, text="Gender:").grid(
             row=1, column=0, sticky="w", padx=5, pady=5)
-
         self.gender_var = tk.StringVar(value="any")
 
         # Create a sub-frame for radio buttons
@@ -72,13 +70,31 @@ class NameGenerator(tk.Frame):
         ttk.Radiobutton(gender_frame, text="Non-binary",
                         variable=self.gender_var, value="non-binary").pack(side="left", padx=(0, 10))
 
+        # Locale selection
+        tk.Label(self.options_frame, text="Region/Language").grid(
+            row=2, column=0, padx=5, pady=5, sticky="w")
+
+        self.locale_var = tk.StringVar(value=LOCALE_MAPPING["en"])
+
+        locale_combo = ttk.Combobox(
+            self.options_frame,
+            textvariable=self.locale_var,
+            values=list(LOCALE_MAPPING.values()),  # All locale display values
+            state="readonly",  # Prevent typing, only selection
+            width=25  # Adjust width as needed
+        )
+        locale_combo.grid(row=2, column=1, padx=5, sticky="w")
+
+        # Bind selection event (similar to OptionMenu's command)
+        locale_combo.bind("<<ComboboxSelected>>", self.on_locale_select)
+
         # Number of names
         tk.Label(self.options_frame, text="Number of names:").grid(
-            row=2, column=0, sticky="w", padx=5, pady=5)
+            row=3, column=0, sticky="w", padx=5, pady=5)
         self.entry_count = tk.IntVar(value=5)
         num_spinbox = ttk.Spinbox(
             self.options_frame, from_=1, to=self.MAX_PEOPLE, textvariable=self.entry_count, width=10)
-        num_spinbox.grid(row=2, column=1, columnspan=3, sticky="w", padx=5)
+        num_spinbox.grid(row=3, column=1, columnspan=3, sticky="w", padx=5)
 
         # Label for entry_count status messages
         self.entry_count_label = tk.Label(
@@ -102,7 +118,8 @@ class NameGenerator(tk.Frame):
         # Text widget for displaying names
         self.results_text = tk.Text(results_frame, height=10, width=40)
         self.results_text.pack(side="left", expand=True, fill="both")
-        self.results_text.insert(tk.END, "Default text will appear here...\n")
+        self.results_text.insert(
+            tk.END, "Generated data will appear here...\n")
         self.results_text.config(state="disabled")
         self.scrollbar = tk.Scrollbar(results_frame)
         self.scrollbar.pack(side="right", fill="y")
@@ -138,6 +155,7 @@ class NameGenerator(tk.Frame):
         reset_button.pack(pady=10)
 
     def generate_names(self):
+        """Generate names based on selected options and display in text box"""
         try:
             count = int(self.entry_count.get())
             if count > self.MAX_PEOPLE:
@@ -158,15 +176,19 @@ class NameGenerator(tk.Frame):
 
         action = self.action_var.get()
         gender = self.gender_var.get()
+        locale = self.current_locale_key if hasattr(
+            self, 'current_locale_key') else "en"
 
         results = []
         for _ in range(count):
             if action == "Full Name":
-                name = generate_random_name(sex=gender)
+                name = generate_random_name(sex=gender, locale=locale)
             elif action == "First Name":
-                name = generate_random_name(sex=gender).split()[0]
+                name = generate_random_name(
+                    sex=gender, locale=locale).split()[0]
             elif action == "Last Name":
-                name = generate_random_name(sex=gender).split()[-1]
+                name = generate_random_name(
+                    sex=gender, locale=locale).split()[-1]
             else:
                 name = ""
             results.append(name)
@@ -178,39 +200,60 @@ class NameGenerator(tk.Frame):
         self.results_text.config(state="disabled")
         self.update_copy_button()
 
+    def on_locale_select(self, event=None):
+        """Handle locale selection from dropdown"""
+        # Get the selected display value
+        selected_display = self.locale_var.get()
+
+        for key, value in LOCALE_MAPPING.items():
+            if value == selected_display:
+                self.current_locale_key = key
+                break
+
     def copy_to_clipboard(self):
         """Copy generated names to clipboard"""
         names = self.results_text.get(1.0, tk.END).strip()
         if names:
             self.clipboard_clear()
             self.clipboard_append(names)
-            message = "Names copied to clipboard!"
+
+            # Count lines in the text
+            line_count = self.results_text.index('end-1c').split('.')[0]
+            message = f"{line_count} name(s) copied to clipboard!"
             self.show_copy_reset_message(message)
 
     def show_entry_count_message(self, message, color="red"):
+        """Display a temporary entry count message with automatic fade-out"""
         self.entry_count_label.config(text=message, fg=color)
         self.entry_count_label.after(
             2000, self.hide_entry_count_message)
 
     def hide_entry_count_message(self):
+        """Clear the entry count message from the UI"""
         self.entry_count_label.config(text="")
 
     def show_copy_reset_message(self, message, color="green"):
+        """Display a temporary message about copy/reset actions with automatic fade-out"""
         self.copy_reset_message_label.config(text=message, fg=color)
         self.copy_reset_message_label.after(
             2000, self.hide_copy_reset_message)
 
     def hide_copy_reset_message(self):
+        """Clear the reset confirmation message from the UI"""
         self.copy_reset_message_label.config(text="")
 
-    # Function to update the copy button's state
     def update_copy_button(self):
-        if self.results_text.get("1.0", tk.END) == "\n":
+        """Enable or disable copy button based on results text"""
+        results_text = self.results_text.get("1.0", tk.END)
+        if results_text.strip() == "":
+            # Disable copy button if results text is empty
             self.copy_button.config(state="disabled")
         else:
+            # Enable copy button if results text is not empty
             self.copy_button.config(state="normal")
 
     def reset_state(self):
+        """Reset all UI elements to default values"""
         self.copy_reset_message_label.config(text="Options reset!", fg="red")
         self.copy_reset_message_label.after(
             2000, self.hide_copy_reset_message)  # hide after 2 seconds
@@ -220,6 +263,7 @@ class NameGenerator(tk.Frame):
         self.entry_count.set(5)
         self.results_text.config(state="normal")
         self.results_text.delete("1.0", tk.END)
-        self.results_text.insert(tk.END, "Default text will appear here...\n")
+        self.results_text.insert(
+            tk.END, "Generated data will appear here...\n")
         self.results_text.config(state="disabled")
         self.copy_button.config(state="disabled")
