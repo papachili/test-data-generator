@@ -49,3 +49,12 @@ class MainMenu(tk.Frame):
             width=25
         )
         name_btn.pack(pady=10)
+
+        # Test View Button
+        test_btn = ttk.Button(
+            button_frame,
+            text="Test View",
+            command=lambda: self.controller.show_frame('TestView'),
+            width=25
+        )
+        test_btn.pack(pady=10)
