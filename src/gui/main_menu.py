@@ -24,7 +24,7 @@ class MainMenu(tk.Frame):
         sub_btn_frame = tk.Frame(self)
         sub_btn_frame.pack(pady=10)  # Less space overall
 
-        # Subtitlegit 
+        # Subtitle
         subtitle_label = tk.Label(
             sub_btn_frame,
             text="Select a tool to get started:",
@@ -53,3 +53,20 @@ class MainMenu(tk.Frame):
             width=25
         )
         phone_btn.pack(pady=10)
+        self.add_version_footer()
+
+    def add_version_footer(self):
+        from app import __version__
+        """Add a footer label to display the application version."""
+        # Footer with version number
+        footer_frame = tk.Frame(self)
+        footer_label = tk.Label(
+            self, text=f"Version {__version__}", font=("Arial", 10))
+        footer_label.place(relx=1.0, rely=1.0, anchor="se", height=20)
+
+        version_label = tk.Label(
+            footer_frame,
+            text=f"Version {__version__}",
+            font=("Arial", 10),
+        )
+        version_label.pack(side=tk.RIGHT, padx=5)

@@ -1,5 +1,8 @@
 import tkinter as tk
 
+__version__ = "0.1.0"
+
+
 class App(tk.Tk):
     """Main application class handling window and frame management"""
 
