@@ -32,15 +32,6 @@ class MainMenu(tk.Frame):
         button_frame = tk.Frame(self)
         button_frame.pack(expand=True)
 
-        # Phone Generator Button
-        phone_btn = ttk.Button(
-            button_frame,
-            text="📱 Phone Generator",
-            command=lambda: self.controller.show_frame('PhoneGenerator'),
-            width=25
-        )
-        phone_btn.pack(pady=10)
-
         # Name Generator Button
         name_btn = ttk.Button(
             button_frame,
@@ -50,11 +41,20 @@ class MainMenu(tk.Frame):
         )
         name_btn.pack(pady=10)
 
-        # Test View Button
-        test_btn = ttk.Button(
+        # Phone Generator Button
+        phone_btn = ttk.Button(
             button_frame,
-            text="Test View",
-            command=lambda: self.controller.show_frame('TestView'),
+            text="📱 Phone Generator",
+            command=lambda: self.controller.show_frame('PhoneGenerator'),
             width=25
         )
-        test_btn.pack(pady=10)
+        phone_btn.pack(pady=10)
+
+        # # Test View Button
+        # test_btn = ttk.Button(
+        #     button_frame,
+        #     text="Test View",
+        #     command=lambda: self.controller.show_frame('TestView'),
+        #     width=25
+        # )
+        # test_btn.pack(pady=10)

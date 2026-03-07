@@ -41,14 +41,14 @@ class App(tk.Tk):
         from views.main_menu import MainMenu
         from views.phone_generator import PhoneGenerator
         from views.name_generator import NameGenerator
-        from views.test_view import TestView
+        # from views.test_view import TestView
 
         # Store frame classes
         self.frame_classes = {
             'MainMenu': MainMenu,
             'PhoneGenerator': PhoneGenerator,
             'NameGenerator': NameGenerator,
-            'TestView': TestView
+            # 'TestView': TestView
         }
 
         # Create frames
