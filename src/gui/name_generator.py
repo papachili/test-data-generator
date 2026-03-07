@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from utils import generate_random_name, MAX_AMOUNT, LOCALE_MAPPING_NAME
+from data_generator import generate_random_name, MAX_AMOUNT, LOCALE_MAPPING_NAME
 
 
 class NameGenerator(tk.Frame):

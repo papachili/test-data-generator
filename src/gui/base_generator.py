@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from utils import MAX_AMOUNT
+from data_generator import MAX_AMOUNT
 
 
 class BaseView(tk.Frame):

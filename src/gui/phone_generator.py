@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from views.base_generator import BaseView
-from utils import generate_random_phone_number, MAX_AMOUNT, LOCALE_MAPPING_PHONE
+from gui.base_generator import BaseView
+from data_generator import generate_random_phone_number, MAX_AMOUNT, LOCALE_MAPPING_PHONE
 
 
 class PhoneGenerator(BaseView):

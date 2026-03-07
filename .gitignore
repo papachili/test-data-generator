@@ -209,3 +209,5 @@ __marimo__/
 # Others
 tempCodeRunnerFile.py
 sample.py
+dist/
+build/

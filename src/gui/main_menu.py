@@ -11,7 +11,7 @@ class MainMenu(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        """Create all widgets for this view"""
+        """Create all widgets for Main Menu view"""
         # Title
         title_label = tk.Label(
             self,
@@ -20,17 +20,21 @@ class MainMenu(tk.Frame):
         )
         title_label.pack(pady=30)
 
-        # Subtitle
-        subtitle_label = tk.Label(
-            self,
-            text="Select a tool to get started",
-            font=("Arial", 12)
-        )
-        subtitle_label.pack(pady=(0, 40))
+        # Container for subtitle and buttons
+        sub_btn_frame = tk.Frame(self)
+        sub_btn_frame.pack(pady=10)  # Less space overall
 
-        # Button container
-        button_frame = tk.Frame(self)
-        button_frame.pack(expand=True)
+        # Subtitlegit 
+        subtitle_label = tk.Label(
+            sub_btn_frame,
+            text="Select a tool to get started:",
+            font=("Arial", 12, "bold")
+        )
+        subtitle_label.pack(pady=(0, 10))  # Small space below subtitle
+
+        # Button container inside the same frame
+        button_frame = tk.Frame(sub_btn_frame)
+        button_frame.pack()
 
         # Name Generator Button
         name_btn = ttk.Button(
@@ -49,12 +53,3 @@ class MainMenu(tk.Frame):
             width=25
         )
         phone_btn.pack(pady=10)
-
-        # # Test View Button
-        # test_btn = ttk.Button(
-        #     button_frame,
-        #     text="Test View",
-        #     command=lambda: self.controller.show_frame('TestView'),
-        #     width=25
-        # )
-        # test_btn.pack(pady=10)
