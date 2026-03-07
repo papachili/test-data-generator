@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from utils import MAX_AMOUNT
 
 
 class BaseView(tk.Frame):
@@ -22,6 +23,8 @@ class BaseView(tk.Frame):
         self.add_main_content()
         # Options frame
         self.add_options_frame()
+        # Amount selection spinbox
+        self.add_amount_option_spinbox()
         # Generate button
         self.add_generate_button(command=None)
         # Results area
@@ -94,7 +97,20 @@ class BaseView(tk.Frame):
             if value == selected_display:
                 self.current_locale_key = key
                 break
-        print(f"Selected locale key: {self.current_locale_key}")
+
+    def add_amount_option_spinbox(self, default_value=5, label_text="Amount:"):
+        """Add an amount selection spinbox to the options frame."""
+        tk.Label(self.options_frame, text=label_text).grid(
+            row=1, column=0, padx=5, pady=5, sticky="w")
+        self.entry_count = tk.IntVar(value=default_value)
+        num_spinbox = ttk.Spinbox(
+            self.options_frame,
+            from_=1,
+            to=MAX_AMOUNT,
+            textvariable=self.entry_count,
+            width=10
+        )
+        num_spinbox.grid(row=1, column=1, padx=5, sticky="w")
 
     def add_generate_button(self, text="Generate", command=None):
         """Add a generate button to the content frame."""
@@ -134,7 +150,18 @@ class BaseView(tk.Frame):
             text="Copy to Clipboard",
             command=self.copy_to_clipboard
         )
+        self.copy_button.config(state="disabled")
         self.copy_button.pack(pady=10)
+
+    def update_copy_button(self):
+        """Enable or disable copy button based on results text"""
+        results_text = self.results_text.get("1.0", tk.END)
+        if results_text.strip() == "":
+            # Disable copy button if results text is empty
+            self.copy_button.config(state="disabled")
+        else:
+            # Enable copy button if results text is not empty
+            self.copy_button.config(state="normal")
 
     def add_copy_reset_message_label(self):
         """Add a label for copy and reset status messages."""
@@ -163,6 +190,14 @@ class BaseView(tk.Frame):
             command=self.reset_options
         )
         self.reset_button.pack(pady=10)
+
+    def display_results(self, results):
+        """Display generated results in the results text area."""
+        self.results_text.config(state="normal")
+        self.results_text.delete("1.0", tk.END)
+        self.results_text.insert(tk.END, "\n".join(results))
+        self.results_text.config(state="disabled")
+        self.update_copy_button()
 
     def reset_options(self):
         """Reset view to initial state"""

@@ -192,4 +192,4 @@ def generate_random_name(sex=None, locale=None, include_title=False):
 def generate_random_phone_number(locale=None):
     fake = Faker(locale)
     phone_number = fake.phone_number()
-    print(phone_number)
+    return phone_number
