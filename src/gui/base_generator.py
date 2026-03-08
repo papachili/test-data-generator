@@ -23,6 +23,8 @@ class BaseView(tk.Frame):
         self.add_main_content()
         # Options frame
         self.add_options_frame()
+        # Entry count message label
+        self.add_entry_count_message()
         # Generate button
         self.add_generate_button(command=None)
         # Results area
@@ -67,7 +69,7 @@ class BaseView(tk.Frame):
             self.content_frame, text="Options", padx=10, pady=10)
         self.options_frame.pack(fill="x", pady=(0, 20))
 
-    def add_actions_frame(self, text="Select action:", actions_list=None, row=0, column=0):
+    def add_actions_frame(self, text="Select action:", actions_list=None, command=None, row=0, column=0):
         """Add actions frame to the view."""
         self.actions_frame = tk.Frame(self.content_frame)
         self.actions_frame.pack(fill="x", pady=(0, 20))
@@ -78,7 +80,7 @@ class BaseView(tk.Frame):
         self.action_var = tk.StringVar(
             value=actions_list[0] if actions_list else "")
         self.option_menu = ttk.OptionMenu(self.options_frame, self.action_var,
-                                          actions_list[0], *actions_list)
+                                          actions_list[0], *actions_list, command=command)
         self.option_menu.grid(row=row, column=column+1, padx=5, sticky="w")
 
     def add_locale_option(self, default_locale_key=None, locale_mapping_dict=None, label_text="Region/Language", row=0, column=0):
@@ -123,6 +125,12 @@ class BaseView(tk.Frame):
             width=10
         )
         num_spinbox.grid(row=row, column=column+1, padx=5, sticky="w")
+
+    def add_entry_count_message(self):
+        # Label for entry_count status messages
+        self.entry_count_label = tk.Label(
+            self.content_frame, text="")
+        self.entry_count_label.pack()
 
     def add_generate_button(self, text="Generate", command=None):
         """Add a generate button to the content frame."""
