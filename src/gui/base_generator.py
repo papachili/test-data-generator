@@ -23,8 +23,6 @@ class BaseView(tk.Frame):
         self.add_main_content()
         # Options frame
         self.add_options_frame()
-        # Amount selection spinbox
-        self.add_amount_option_spinbox()
         # Generate button
         self.add_generate_button(command=None)
         # Results area
@@ -69,10 +67,24 @@ class BaseView(tk.Frame):
             self.content_frame, text="Options", padx=10, pady=10)
         self.options_frame.pack(fill="x", pady=(0, 20))
 
-    def add_locale_option(self, default_locale_key=None, locale_mapping_dict=None, label_text="Region/Language"):
+    def add_actions_frame(self, text="Select action:", actions_list=None, row=0, column=0):
+        """Add actions frame to the view."""
+        self.actions_frame = tk.Frame(self.content_frame)
+        self.actions_frame.pack(fill="x", pady=(0, 20))
+
+        # Action selection
+        tk.Label(self.options_frame, text=text).grid(
+            row=row, column=column, padx=5, pady=5, sticky="w")
+        self.action_var = tk.StringVar(
+            value=actions_list[0] if actions_list else "")
+        self.option_menu = ttk.OptionMenu(self.options_frame, self.action_var,
+                                          actions_list[0], *actions_list)
+        self.option_menu.grid(row=row, column=column+1, padx=5, sticky="w")
+
+    def add_locale_option(self, default_locale_key=None, locale_mapping_dict=None, label_text="Region/Language", row=0, column=0):
         """Add a locale selection option to the options frame."""
         tk.Label(self.options_frame, text=label_text).grid(
-            row=0, column=0, padx=5, pady=5, sticky="w")
+            row=row, column=column, padx=5, pady=5, sticky="w")
 
         self.locale_var = tk.StringVar(value=default_locale_key)
         self.locale_mapping_dict = locale_mapping_dict or {}
@@ -85,7 +97,7 @@ class BaseView(tk.Frame):
             state="readonly",
             width=25
         )
-        self.locale_combo.grid(row=0, column=1, padx=5, sticky="w")
+        self.locale_combo.grid(row=row, column=column+1, padx=5, sticky="w")
         self.locale_combo.bind("<<ComboboxSelected>>", self.on_locale_select)
 
     def on_locale_select(self, event=None):
@@ -98,10 +110,10 @@ class BaseView(tk.Frame):
                 self.current_locale_key = key
                 break
 
-    def add_amount_option_spinbox(self, default_value=5, label_text="Amount:"):
+    def add_amount_option_spinbox(self, default_value=5, label_text="Amount:", row=0, column=0):
         """Add an amount selection spinbox to the options frame."""
         tk.Label(self.options_frame, text=label_text).grid(
-            row=1, column=0, padx=5, pady=5, sticky="w")
+            row=row, column=column, padx=5, pady=5, sticky="w")
         self.entry_count = tk.IntVar(value=default_value)
         num_spinbox = ttk.Spinbox(
             self.options_frame,
@@ -110,7 +122,7 @@ class BaseView(tk.Frame):
             textvariable=self.entry_count,
             width=10
         )
-        num_spinbox.grid(row=1, column=1, padx=5, sticky="w")
+        num_spinbox.grid(row=row, column=column+1, padx=5, sticky="w")
 
     def add_generate_button(self, text="Generate", command=None):
         """Add a generate button to the content frame."""

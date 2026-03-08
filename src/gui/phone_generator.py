@@ -19,6 +19,8 @@ class PhoneGenerator(BaseView):
         self.default_locale_key = LOCALE_MAPPING_PHONE["en_GB"]
         self.add_locale_option(
             default_locale_key=self.default_locale_key, locale_mapping_dict=LOCALE_MAPPING_PHONE)
+        # Amount selection spinbox
+        self.add_amount_option_spinbox(row=1, column=0)
         # Set default amount for phone generator
         self.entry_count.set(5)
         # Update generate button command
