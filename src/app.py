@@ -1,6 +1,6 @@
 import tkinter as tk
 
-__version__ = "0.1.0"
+__version__ = "0.2.0-beta"
 
 
 class App(tk.Tk):
@@ -67,11 +67,13 @@ class App(tk.Tk):
         from gui.main_menu import MainMenu
         from gui.phone_generator import PhoneGenerator
         from gui.name_generator import NameGenerator
+        from gui.email_generator import EmailGenerator
 
         self.frame_classes = {
             'MainMenu': MainMenu,
             'PhoneGenerator': PhoneGenerator,
             'NameGenerator': NameGenerator,
+            'EmailGenerator': EmailGenerator
         }
 
         self.frames = {}

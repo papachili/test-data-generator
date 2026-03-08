@@ -53,6 +53,17 @@ class MainMenu(tk.Frame):
             width=25
         )
         phone_btn.pack(pady=10)
+
+        # Email Generator Button
+        email_btn = ttk.Button(
+            button_frame,
+            text="📧 Email Generator",
+            command=lambda: self.controller.show_frame('EmailGenerator'),
+            width=25
+        )
+        email_btn.pack(pady=10)
+
+        # Version footer
         self.add_version_footer()
 
     def add_version_footer(self):
