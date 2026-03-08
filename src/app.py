@@ -31,13 +31,13 @@ class App(tk.Tk):
     def setup_window(self):
         """Set window size and position it at the center of the screen"""
         # Set initial size
-        self.geometry("500x700")
+        self.geometry("500x650")
         # Center the window on the screen
         self.center_window()
 
     def setup_container(self):
         """Configure main container grid and create frame holder"""
-        self.minsize(500, 700)
+        self.minsize(500, 650)
         # Configure grid for main container
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
