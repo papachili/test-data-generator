@@ -28,25 +28,8 @@ class PhoneGenerator(BaseView):
 
     def generate_phones(self):
         """Generate phone numbers based on user input."""
-        try:
-            count = int(self.entry_count.get())
-            if count > MAX_AMOUNT:
-                message = f"Number exceeds the maximum allowed ({MAX_AMOUNT}). Setting to maximum."
-                self.show_fading_message(
-                    self.entry_count_label, message, "red")
-                self.entry_count.set(MAX_AMOUNT)
-                return
-            elif count <= 0:
-                message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
-                self.show_fading_message(
-                    self.entry_count_label, message, "red")
-                self.entry_count.set(5)
-                return
-        except Exception as e:
-            message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
-            self.show_fading_message(
-                self.entry_count_label, message, "red")
-            self.entry_count.set(5)
+        count = self.validate_entry_count()
+        if not count:
             return
 
         locale = self.current_locale_key if hasattr(

@@ -142,6 +142,26 @@ class BaseView(tk.Frame):
         )
         self.generate_button.pack(pady=(0, 20))
 
+    def validate_entry_count(self):
+        try:
+            count = int(self.entry_count.get())
+            if count > MAX_AMOUNT:
+                message = f"Number exceeds the maximum allowed ({MAX_AMOUNT}). Setting to maximum."
+                self.show_fading_message(
+                    self.entry_count_label, message, "red")
+                self.entry_count.set(MAX_AMOUNT)
+            elif count <= 0:
+                message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
+                self.show_fading_message(
+                    self.entry_count_label, message, "red")
+                self.entry_count.set(5)
+            else:
+                return count
+        except Exception as e:
+            message = "Please enter a valid integer."
+            self.show_fading_message(self.entry_count_label, message, "red")
+            self.entry_count.set(5)
+
     def add_results_area(self, title="Results"):
         """Add a results area to the content frame."""
         # Results area
