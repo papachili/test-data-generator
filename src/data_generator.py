@@ -1,7 +1,7 @@
 import random
 from faker import Faker
 
-MAX_AMOUNT = 9999  # maximum amount that can be generated at once
+MAX_AMOUNT = 100000  # maximum amount that can be generated at once
 
 LOCALE_MAPPING_NAME = {
     "ar_AA": "Arabic (Arabia)",
@@ -162,6 +162,52 @@ LOCALE_MAPPING_PHONE = {
     'vi_VN': 'Vietnamese'
 }
 
+LOCALE_MAPPING_INTERNET = {
+    "ar_AA": "Arabic (Arabian Peninsula)",
+    "az_AZ": "Azerbaijani (Azerbaijan)",
+    "bn_BD": "Bengali (Bangladesh)",
+    "bs_BA": "Bosnian (Bosnia and Herzegovina)",
+    "bg_BG": "Bulgarian (Bulgaria)",
+    "zh_CN": "Chinese (China)",
+    "zh_TW": "Chinese (Traditional, Taiwan)",
+    "hr_HR": "Croatian (Croatia)",
+    "cs_CZ": "Czech (Czech Republic)",
+    "en_AU": "English (Australia)",
+    "en_NZ": "English (New Zealand)",
+    "en_PH": "English (Philippines)",
+    "en_GB": "English (United Kingdom)",
+    "en_US": "English (United States)",
+    "fil_PH": "Filipino (Philippines)",
+    "fi_FI": "Finnish (Finland)",
+    "fr_FR": "French (France)",
+    "fr_CH": "French (Switzerland)",
+    "de_AT": "German (Austria)",
+    "de_DE": "German (Germany)",
+    "el_GR": "Greek (Greece)",
+    "hu_HU": "Hungarian (Hungary)",
+    "id_ID": "Indonesian (Indonesia)",
+    "it_IT": "Italian (Italy)",
+    "ja_JP": "Japanese (Japan)",
+    "ko_KR": "Korean (South Korea)",
+    "no_NO": "Norwegian (Norway)",
+    "fa_IR": "Persian (Iran)",
+    "pl_PL": "Polish (Poland)",
+    "pt_BR": "Portuguese (Brazil)",
+    "pt_PT": "Portuguese (Portugal)",
+    "ro_RO": "Romanian (Romania)",
+    "ru_RU": "Russian (Russia)",
+    "sk_SK": "Slovak (Slovakia)",
+    "sl_SI": "Slovenian (Slovenia)",
+    "es_AR": "Spanish (Argentina)",
+    "es_CL": "Spanish (Chile)",
+    "es_ES": "Spanish (Spain)",
+    "sv_SE": "Swedish (Sweden)",
+    "tl_PH": "Tagalog (Philippines)",
+    "th_TH": "Thai (Thailand)",
+    "tr_TR": "Turkish (Turkey)",
+    "uk_UA": "Ukrainian (Ukraine)"
+}
+
 
 def generate_random_name(sex=None, locale=None, include_title=False):
     fake = Faker(locale)
@@ -193,3 +239,18 @@ def generate_random_phone_number(locale=None):
     fake = Faker(locale)
     phone_number = fake.phone_number()
     return phone_number
+
+
+def generate_random_email(locale=None, email_type=None, domain=None):
+    fake = Faker(locale)
+    if email_type == "default":
+        email = fake.ascii_email()
+    elif email_type == "free":
+        email = fake.free_email()
+    elif email_type == "company":
+        email = fake.company_email()
+    elif email_type == "custom":
+        email = fake.email(domain=domain) if domain else fake.email()
+    else:
+        email = fake.email()
+    return email
