@@ -14,13 +14,13 @@ class EmailGenerator(BaseView):
 
     def create_additional_widgets(self):
         """Create additional widgets for email generator"""
-        actions_list = ["Default", "Free provider",
-                        "Company email", "Custom domain"]
+        self.actions_dict = {"default": "Default", "free": "Free provider",
+                             "company": "Company email", "custom": "Custom domain"}
+        actions_list = [value for value in self.actions_dict.values()]
         self.add_actions_frame(text="Select email type:",
-                               actions_list=actions_list, row=0, column=0)
-        self.option_menu.config(state="disabled")
+                                    actions_list=actions_list, command=self.show_hide_custom_domain_entry, row=0, column=0)
+        self.add_hidden_custom_domain_entry()
         # Locale selection
-        # Set default locale key for email generator
         self.default_locale_key = LOCALE_MAPPING_INTERNET["en_GB"]
         self.add_locale_option(
             default_locale_key=self.default_locale_key, locale_mapping_dict=LOCALE_MAPPING_INTERNET, row=1, column=0)
@@ -33,30 +33,38 @@ class EmailGenerator(BaseView):
 
     def generate_emails(self):
         """Generate email addresses based on user input."""
-        try:
-            count = int(self.entry_count.get())
-            if count > MAX_AMOUNT:
-                message = f"Number exceeds the maximum allowed ({MAX_AMOUNT}). Setting to maximum."
-                self.show_entry_count_message(message)
-                self.entry_count.set(MAX_AMOUNT)
-                return
-            elif count <= 0:
-                message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
-                self.show_entry_count_message(message)
-                self.entry_count.set(5)
-                return
-        except Exception as e:
-            message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
-            self.show_entry_count_message(message)
-            self.entry_count.set(5)
+        count = self.validate_entry_count()
+        if not count:
             return
 
         locale = self.current_locale_key if hasattr(
             self, 'current_locale_key') else "en_GB"
 
+        email_type = self.action_var.get()
+        email_type_key = {v: k for k,
+                          v in self.actions_dict.items()}.get(email_type)
+
+        if email_type_key == "custom":
+            custom_domain = self.custom_entry.get().strip("@")
+        else:
+            custom_domain = None
+
         results = []
         for _ in range(count):
-            phones = generate_random_email(locale)
+            phones = generate_random_email(
+                locale, email_type_key, custom_domain)
             results.append(phones)
 
         self.display_results(results)
+
+    def add_hidden_custom_domain_entry(self):
+        self.custom_entry = tk.Entry(self.options_frame, width=15)
+        self.custom_entry.insert(0, "@example.com")
+        self.custom_entry.grid(row=0, column=2)
+        self.custom_entry.grid_forget()
+
+    def show_hide_custom_domain_entry(self, value):
+        if value == "Custom domain":
+            self.custom_entry.grid(row=0, column=2)
+        else:
+            self.custom_entry.grid_forget()
