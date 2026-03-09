@@ -23,17 +23,33 @@ class BaseView(tk.Frame):
         self.add_main_content()
         # Options frame
         self.add_options_frame()
-        # Entry count message label
-        self.add_entry_count_message()
+        # Status message label
+        self.add_status_message()
+        # Create frame for Generate buttons
+        self.button_frame = tk.Frame(self.content_frame)
+        self.button_frame.pack(fill="x")
         # Generate button
-        self.add_generate_button(command=None)
+        self.add_generate_button(
+            frame=self.button_frame, command=None, row=0, column=1)
         # Results area
         self.add_results_area("Results")
-        # Copy button and message label
-        self.add_copy_button()
-        self.add_copy_reset_message_label()
+        # Create frame for bottom buttons
+        self.button_frame = tk.Frame(self.content_frame)
+        self.button_frame.pack(fill="x")
+        # Save as JSON button
+        self.add_save_json_button(frame=self.button_frame, row=0, column=0)
+        # Save as CSV button
+        self.add_save_csv_button(frame=self.button_frame, row=0, column=1)
+        # Copy to clipboar button
+        self.add_copy_button(frame=self.button_frame, row=0, column=2)
         # Reset button
-        self.add_reset_button()
+        self.add_reset_button(frame=self.button_frame, row=1, column=1)
+
+        # Configure the bottom buttons frame to expand
+        self.button_frame.grid_columnconfigure(0, weight=2)
+        self.button_frame.grid_columnconfigure(1, weight=1)
+        self.button_frame.grid_columnconfigure(2, weight=1)
+        self.button_frame.grid_columnconfigure(3, weight=0)
 
     def add_header_frame(self):
         """Add header frame to the view."""
@@ -67,7 +83,7 @@ class BaseView(tk.Frame):
         """Add options frame to the view."""
         self.options_frame = tk.LabelFrame(
             self.content_frame, text="Options", padx=10, pady=10)
-        self.options_frame.pack(fill="x", pady=(0, 20))
+        self.options_frame.pack(fill="x", pady=0)
 
     def add_actions_frame(self, text="Select action:", actions_list=None, command=None, row=0, column=0):
         """Add actions frame to the view."""
@@ -126,21 +142,28 @@ class BaseView(tk.Frame):
         )
         num_spinbox.grid(row=row, column=column+1, padx=5, sticky="w")
 
-    def add_entry_count_message(self):
+    def add_status_message(self):
         # Label for entry_count status messages
-        self.entry_count_label = tk.Label(
+        self.status_message_label = tk.Label(
             self.content_frame, text="")
-        self.entry_count_label.pack()
+        self.status_message_label.pack()
 
-    def add_generate_button(self, text="Generate", command=None):
+    def add_generate_button(self, frame=None, text="Generate", command=None, row=0, column=0):
         """Add a generate button to the content frame."""
+        if frame is None:
+            frame = self.content_frame
         self.generate_button = ttk.Button(
-            self.content_frame,
+            frame,
             text=text,
             command=command,
-            width=20
         )
-        self.generate_button.pack(pady=(0, 20))
+        # self.generate_button.pack(pady=(0, 20))
+        self.generate_button.grid(
+            row=row, column=column, pady=(0, 10), padx=130, sticky="ew")
+        self.button_frame.grid_columnconfigure(0, weight=1)
+        self.button_frame.grid_columnconfigure(1, weight=2)
+        self.button_frame.grid_columnconfigure(2, weight=1)
+        self.button_frame.grid_columnconfigure(3, weight=0)
 
     def validate_entry_count(self):
         try:
@@ -148,29 +171,29 @@ class BaseView(tk.Frame):
             if count > MAX_AMOUNT:
                 message = f"Number exceeds the maximum allowed ({MAX_AMOUNT}). Setting to maximum."
                 self.show_fading_message(
-                    self.entry_count_label, message, "red")
+                    self.status_message_label, message, "red")
                 self.entry_count.set(MAX_AMOUNT)
             elif count <= 0:
                 message = f"Please enter a positive number between 1 and {MAX_AMOUNT}"
                 self.show_fading_message(
-                    self.entry_count_label, message, "red")
+                    self.status_message_label, message, "red")
                 self.entry_count.set(5)
             else:
                 return count
         except Exception as e:
             message = "Please enter a valid integer."
-            self.show_fading_message(self.entry_count_label, message, "red")
+            self.show_fading_message(self.status_message_label, message, "red")
             self.entry_count.set(5)
 
-    def add_results_area(self, title="Results"):
+    def add_results_area(self, title="Results", pady=0):
         """Add a results area to the content frame."""
         # Results area
         self.results_frame = tk.LabelFrame(
             self.content_frame, text=title, padx=10, pady=10)
-        self.results_frame.pack(expand=True, fill="both")
+        self.results_frame.pack(expand=True, fill="both", pady=pady)
 
         # Text widget for displaying results
-        self.results_text = tk.Text(self.results_frame, height=10, width=40)
+        self.results_text = tk.Text(self.results_frame, height=15, width=40)
         self.results_text.pack(side="left", expand=True, fill="both")
         self.results_text.insert(
             tk.END, "Generated data will appear here...\n")
@@ -180,18 +203,43 @@ class BaseView(tk.Frame):
         self.results_text.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.results_text.yview)
 
-    def add_copy_button(self):
+    def add_copy_button(self, frame=None, row=0, column=0):
         """Add a copy to clipboard button below the results area."""
-        self.copy_button_frame = tk.Frame(self.content_frame)
-        self.copy_button_frame.pack(pady=10)
-
+        if frame is None:
+            frame = self.content_frame
         self.copy_button = ttk.Button(
-            self.copy_button_frame,
+            frame,
             text="Copy to Clipboard",
             command=self.copy_to_clipboard
         )
         self.copy_button.config(state="disabled")
-        self.copy_button.pack(pady=10)
+        self.copy_button.grid(row=row, column=column, pady=10, sticky="ew")
+
+    def add_save_json_button(self, frame=None, row=0, column=0):
+        """Add a Save as JSON button below the results area."""
+        if frame is None:
+            frame = self.content_frame
+        self.save_json_button = ttk.Button(
+            frame,
+            text="Save as JSON",
+            command=None
+        )
+        self.save_json_button.config(state="disabled")
+        self.save_json_button.grid(
+            row=row, column=column, pady=10, sticky="ew")
+
+    def add_save_csv_button(self, frame=None, row=0, column=0):
+        """Add a Save as CSV button below the results area."""
+        if frame is None:
+            frame = self.content_frame
+        self.save_csv_button = ttk.Button(
+            frame,
+            text="Save as CSV",
+            command=None
+        )
+        self.save_csv_button.config(state="disabled")
+        self.save_csv_button.grid(
+            row=row, column=column, pady=10, sticky="ew")
 
     def update_copy_button(self):
         """Enable or disable copy button based on results text"""
@@ -203,13 +251,6 @@ class BaseView(tk.Frame):
             # Enable copy button if results text is not empty
             self.copy_button.config(state="normal")
 
-    def add_copy_reset_message_label(self):
-        """Add a label for copy and reset status messages."""
-        # Label for copy and reset status messages
-        self.copy_reset_message_label = tk.Label(
-            self.copy_button_frame, text="")
-        self.copy_reset_message_label.pack()
-
     def copy_to_clipboard(self):
         """Copy generated content to clipboard"""
         content = self.results_text.get(1.0, tk.END).strip()
@@ -220,16 +261,18 @@ class BaseView(tk.Frame):
             # Count lines in the text
             line_count = self.results_text.index('end-1c').split('.')[0]
             message = f"{line_count} item(s) copied to clipboard!"
-            self.show_fading_message(self.copy_reset_message_label, message)
+            self.show_fading_message(self.status_message_label, message)
 
-    def add_reset_button(self):
+    def add_reset_button(self, frame=None, row=0, column=0):
         """Add a reset button to the copy button frame."""
+        if frame is None:
+            frame = self.content_frame
         self.reset_button = ttk.Button(
-            self.copy_button_frame,
+            frame,
             text="Reset",
             command=self.reset_options
         )
-        self.reset_button.pack(pady=10)
+        self.reset_button.grid(row=row, column=column, pady=10, sticky="nsew")
 
     def display_results(self, results):
         """Display generated results in the results text area."""
@@ -242,7 +285,7 @@ class BaseView(tk.Frame):
     def reset_options(self):
         """Reset view to initial state"""
         self.show_fading_message(
-            self.copy_reset_message_label, "Options reset!", color="red")
+            self.status_message_label, "Options reset!", color="red")
         self.results_text.config(state="normal")
         self.results_text.delete("1.0", tk.END)
         self.results_text.insert(

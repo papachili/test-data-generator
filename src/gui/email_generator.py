@@ -26,8 +26,6 @@ class EmailGenerator(BaseView):
             default_locale_key=self.default_locale_key, locale_mapping_dict=LOCALE_MAPPING_INTERNET, row=1, column=0)
         # Amount selection spinbox
         self.add_amount_option_spinbox(row=2, column=0)
-        # Set default amount for email generator
-        # self.entry_count.set(5)
         # Update generate button command
         self.generate_button.config(command=self.generate_emails)
 
