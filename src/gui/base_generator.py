@@ -1,6 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox, simpledialog
 from data_generator import MAX_AMOUNT
+import json
+import os
 
 
 class BaseView(tk.Frame):
@@ -222,7 +224,7 @@ class BaseView(tk.Frame):
         self.save_json_button = ttk.Button(
             frame,
             text="Save as JSON",
-            command=None
+            command=self.save_to_json
         )
         self.save_json_button.config(state="disabled")
         self.save_json_button.grid(
@@ -235,7 +237,7 @@ class BaseView(tk.Frame):
         self.save_csv_button = ttk.Button(
             frame,
             text="Save as CSV",
-            command=None
+            command=self.save_to_csv
         )
         self.save_csv_button.config(state="disabled")
         self.save_csv_button.grid(
@@ -247,9 +249,13 @@ class BaseView(tk.Frame):
         if results_text.strip() == "":
             # Disable copy button if results text is empty
             self.copy_button.config(state="disabled")
+            self.save_json_button.config(state="disabled")
+            self.save_csv_button.config(state="disabled")
         else:
             # Enable copy button if results text is not empty
             self.copy_button.config(state="normal")
+            self.save_json_button.config(state="normal")
+            self.save_csv_button.config(state="normal")
 
     def copy_to_clipboard(self):
         """Copy generated content to clipboard"""
@@ -292,8 +298,69 @@ class BaseView(tk.Frame):
             tk.END, "Generated data will appear here...\n")
         self.results_text.config(state="disabled")
         self.copy_button.config(state="disabled")
+        self.save_json_button.config(state="disabled")
+        self.save_csv_button.config(state="disabled")
 
     def show_fading_message(self, label, message, color="green", duration=2000):
         """Display a temporary message on a specific label with automatic fade-out"""
         label.config(text=message, fg=color)
         label.after(duration, lambda: label.config(text=""))
+
+    def show_confirmation_dialog(self, title, message):
+        """Show a confirmation dialog with a title and message."""
+        response = messagebox.askyesno(
+            title, f"{message} Do you want to overwrite the file?"
+        )
+        return response
+
+    def save_to_json(self):
+        """
+        Save Results text box content to "data.json" file.
+
+        """
+        file_path = "data.json"
+        self.save_file(file_path, file_format="json")
+
+    def save_to_csv(self):
+        """
+        Save Results text box content to "data.csv" file.
+
+        """
+        file_path = "data.csv"
+        self.save_file(file_path, file_format="csv")
+
+    def save_file(self, file_path, file_format="csv"):
+        """
+        Save the file to the specified path.
+        """
+        # Check if file already exists
+        if os.path.exists(file_path):
+            # Show confirmation dialog if file exists
+            response = self.show_confirmation_dialog(
+                "Overwrite existing file", "File already exists."
+            )
+            if not response:
+                return  # Exit if user cancels
+
+        # Get the content of the text area
+        content = self.results_text.get(1.0, tk.END).strip()
+
+        # Split the content into lines
+        data = [line.strip().split(',') for line in content.splitlines()]
+
+        # Save file based on format
+        if file_format == "json":
+            # Convert data to JSON string with indentation
+            json_str = json.dumps(data, indent=4)
+            with open(file_path, "w") as f:
+                f.write(json_str)
+        elif file_format == "csv":
+            # Use csv module to write CSV file
+            with open(file_path, 'w', newline='') as csvfile:
+                for row in data:
+                    csvfile.write(row[0] + ",\n")
+
+        # Count lines in the text and show status message
+        line_count = self.results_text.index('end-1c').split('.')[0]
+        message = f"{line_count} item(s) saved to {file_path}!"
+        self.show_fading_message(self.status_message_label, message)
