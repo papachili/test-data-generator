@@ -19,10 +19,11 @@ Test Data Generator is a simple tool designed to generate realistic test data fo
 
 ## Features:
 
-- Generate realistic names for different regions and languages
-- Generate phone numbers suitable for various locales
-- Bulk Generation up to 9999 records
-- Simple and intuitive interface
+- **Random Name Generation**: Generate realistic names for different regions and languages.
+- **Phone Number Generation**: Generate phone numbers suitable for different regions.
+- **Email Address Generation**: Generate email addresses for different regions.
+- **Bulk Generation**: Generate up to 100,000 records in bulk.
+- **Export Options**: Copy to clipboard, Save to JSON, Save to CSV.
 
 ## Project Structure
 
@@ -78,6 +79,5 @@ See the [MIT License](https://github.com/papachili/test-data-generator/blob/main
 
 ## TODO
 
-- Support generation of other data types (e.g., addresses, email addresses, etc.)
+- Support generation of other data types (e.g., addresses, passport, credit cards etc.)
 - Control data format, quantity, and structure
-- Save as CSV, JSON, Excel, or SQL
