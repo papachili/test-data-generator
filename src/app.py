@@ -31,7 +31,7 @@ class App(tk.Tk):
     def setup_window(self):
         """Set window size and position it at the center of the screen"""
         # Set initial size
-        self.geometry("500x670")
+        self.geometry("500x680")
         # Center the window on the screen
         self.center_window()
 

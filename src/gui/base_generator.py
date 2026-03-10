@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 from data_generator import MAX_AMOUNT
 import json
+import csv
 import os
 
 
@@ -329,7 +330,7 @@ class BaseView(tk.Frame):
         file_path = "data.csv"
         self.save_file(file_path, file_format="csv")
 
-    def save_file(self, file_path, file_format="csv"):
+    def save_file(self, file_path, file_format="csv", key_name=None):
         """
         Save the file to the specified path.
         """
@@ -348,17 +349,54 @@ class BaseView(tk.Frame):
         # Split the content into lines
         data = [line.strip().split(',') for line in content.splitlines()]
 
-        # Save file based on format
-        if file_format == "json":
-            # Convert data to JSON string with indentation
-            json_str = json.dumps(data, indent=4)
-            with open(file_path, "w") as f:
-                f.write(json_str)
-        elif file_format == "csv":
-            # Use csv module to write CSV file
-            with open(file_path, 'w', newline='') as csvfile:
-                for row in data:
-                    csvfile.write(row[0] + ",\n")
+        view = self.title_label['text']
+        if view == "Name Generator":
+            action = self.action_var.get()
+            if action == "Full Name":
+                key_name = "name"
+            elif action == "First Name":
+                key_name = "first_name"
+            elif action == "Last Name":
+                key_name = "last_name"
+        elif view == "Phone Generator":
+            key_name = "phone_number"
+        elif view == "Email Generator":
+            key_name = "email"
+        else:
+            return
+        if key_name != None:
+            # Convert list of lists to list of dicts
+            dict_data = [{key_name: row[0]} for row in data]
+
+            # Save file based on format
+            if file_format == "json":
+                # Convert data to JSON string with indentation
+                json_str = json.dumps(dict_data, ensure_ascii=False, indent=4)
+                with open(file_path, "w", encoding='utf-8') as f:
+                    f.write(json_str)
+            elif file_format == "csv":
+                # Use csv module to write CSV file
+                # with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
+                #     csvfile.writerows([row.values() for row in dict_data])
+
+                with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
+                    writer = csv.writer(csvfile)
+                    # Write the first row as the column headers (keys)
+                    writer.writerow(dict_data[0].keys())
+                    # Write the rest of the rows (values)
+                    writer.writerows([row.values() for row in dict_data[1:]])
+        else:
+            # Save file based on format
+            if file_format == "json":
+                # Convert data to JSON string with indentation
+                json_str = json.dumps(data, ensure_ascii=False, indent=4)
+                with open(file_path, "w", encoding='utf-8') as f:
+                    f.write(json_str)
+            elif file_format == "csv":
+                # Use csv module to write CSV file
+                with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
+                    for row in data:
+                        csvfile.write(row[0] + ",\n")
 
         # Count lines in the text and show status message
         line_count = self.results_text.index('end-1c').split('.')[0]
