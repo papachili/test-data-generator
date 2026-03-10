@@ -31,7 +31,7 @@ class App(tk.Tk):
     def setup_window(self):
         """Set window size and position it at the center of the screen"""
         # Set initial size
-        self.geometry("500x650")
+        self.geometry("500x670")
         # Center the window on the screen
         self.center_window()
 
@@ -65,15 +65,15 @@ class App(tk.Tk):
         """Initialize all application frames"""
         # Import here to avoid circular imports
         from gui.main_menu import MainMenu
-        from gui.phone_generator import PhoneGenerator
         from gui.name_generator import NameGenerator
+        from gui.phone_generator import PhoneGenerator
         from gui.email_generator import EmailGenerator
 
         self.frame_classes = {
             'MainMenu': MainMenu,
-            'PhoneGenerator': PhoneGenerator,
             'NameGenerator': NameGenerator,
-            'EmailGenerator': EmailGenerator
+            'PhoneGenerator': PhoneGenerator,
+            'EmailGenerator': EmailGenerator,
         }
 
         self.frames = {}
