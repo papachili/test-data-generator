@@ -14,9 +14,9 @@ class NameGenerator(BaseView):
 
     def create_additional_widgets(self):
         """Create additional widgets for name generator"""
-        actions_list = ["Full Name", "First Name", "Last Name"]
+        self.actions_list = ["Full Name", "First Name", "Last Name"]
         self.add_actions_frame(text="Select action:",
-                                    actions_list=actions_list, row=0, column=0)
+                                    actions_list=self.actions_list, row=0, column=0)
 
         # Gender selection
         tk.Label(self.options_frame, text="Gender:").grid(
@@ -46,8 +46,10 @@ class NameGenerator(BaseView):
         self.add_amount_option_spinbox(row=3, column=0)
         # Set default amount for phone generator
         self.entry_count.set(5)
-        # Update generate button command
+        # Update Generate button command
         self.generate_button.config(command=self.generate_names)
+        # Update Reset button command
+        self.reset_button.config(command=self.reset_state)
 
     def generate_names(self):
         """Generate names based on selected options and display in text box"""
@@ -79,16 +81,7 @@ class NameGenerator(BaseView):
 
     def reset_state(self):
         """Reset all UI elements to default values"""
-        self.copy_reset_message_label.config(text="Options reset!", fg="red")
-        self.copy_reset_message_label.after(
-            2000, self.hide_copy_reset_message)  # hide after 2 seconds
-
-        self.action_var.set("Full Name")
+        self.action_var.set(self.actions_list[0])
         self.gender_var.set("any")
-        self.entry_count.set(5)
-        self.results_text.config(state="normal")
-        self.results_text.delete("1.0", tk.END)
-        self.results_text.insert(
-            tk.END, "Generated data will appear here...\n")
-        self.results_text.config(state="disabled")
-        self.copy_button.config(state="disabled")
+        self.locale_var.set(self.default_locale_key)
+        super().reset_options()

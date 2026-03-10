@@ -16,9 +16,9 @@ class EmailGenerator(BaseView):
         """Create additional widgets for email generator"""
         self.actions_dict = {"default": "Default", "free": "Free provider",
                              "company": "Company email", "custom": "Custom domain"}
-        actions_list = [value for value in self.actions_dict.values()]
+        self.actions_list = [value for value in self.actions_dict.values()]
         self.add_actions_frame(text="Select email type:",
-                                    actions_list=actions_list, command=self.show_hide_custom_domain_entry, row=0, column=0)
+                                    actions_list=self.actions_list, command=self.show_hide_custom_domain_entry, row=0, column=0)
         self.add_hidden_custom_domain_entry()
         # Locale selection
         self.default_locale_key = LOCALE_MAPPING_INTERNET["en_GB"]
@@ -28,6 +28,8 @@ class EmailGenerator(BaseView):
         self.add_amount_option_spinbox(row=2, column=0)
         # Update generate button command
         self.generate_button.config(command=self.generate_emails)
+        # Update Reset button command
+        self.reset_button.config(command=self.reset_state)
 
     def generate_emails(self):
         """Generate email addresses based on user input."""
@@ -66,3 +68,9 @@ class EmailGenerator(BaseView):
             self.custom_entry.grid(row=0, column=2)
         else:
             self.custom_entry.grid_forget()
+
+    def reset_state(self):
+        """Reset all UI elements to default values"""
+        self.action_var.set(self.actions_list[0])
+        self.locale_var.set(self.default_locale_key)
+        super().reset_options()

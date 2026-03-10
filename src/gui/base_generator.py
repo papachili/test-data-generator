@@ -293,6 +293,7 @@ class BaseView(tk.Frame):
         """Reset view to initial state"""
         self.show_fading_message(
             self.status_message_label, "Options reset!", color="red")
+        self.entry_count.set(5)
         self.results_text.config(state="normal")
         self.results_text.delete("1.0", tk.END)
         self.results_text.insert(

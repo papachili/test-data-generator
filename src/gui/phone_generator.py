@@ -25,6 +25,8 @@ class PhoneGenerator(BaseView):
         self.entry_count.set(5)
         # Update generate button command
         self.generate_button.config(command=self.generate_phones)
+        # Update Reset button command
+        self.reset_button.config(command=self.reset_state)
 
     def generate_phones(self):
         """Generate phone numbers based on user input."""
@@ -41,3 +43,8 @@ class PhoneGenerator(BaseView):
             results.append(phones)
 
         self.display_results(results)
+
+    def reset_state(self):
+        """Reset all UI elements to default values"""
+        self.locale_var.set(self.default_locale_key)
+        super().reset_options()
