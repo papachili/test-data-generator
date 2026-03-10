@@ -17,6 +17,12 @@
 
 Test Data Generator is a simple tool designed to generate realistic test data for your applications. Built on top of [Faker](https://pypi.org/project/Faker/), a popular library for generating fake data and [Tkinter ](https://docs.python.org/3/library/tkinter.html) for simple UI. Whether you're testing data handling, user interfaces, or database performance, this tool helps streamline your testing process by providing diverse, locale-specific data.
 
+<img width="400" height="550" alt="image" src="https://github.com/user-attachments/assets/f388c7fa-f36f-455e-bbc5-53ca6b7e8f01" />
+<img width="400" height="550" alt="image" src="https://github.com/user-attachments/assets/dc5773d4-cfc7-45a9-98b6-b9271d961228" />
+<img width="400" height="550" alt="image" src="https://github.com/user-attachments/assets/17060432-8475-448c-95c9-a7b9dfc5eb66" />
+<img width="400" height="550" alt="image" src="https://github.com/user-attachments/assets/b3027020-099b-4b0c-95b0-43882b1c0b52" />
+
+
 ## Features:
 
 - **Random Name Generation**: Generate realistic names for different regions and languages.
