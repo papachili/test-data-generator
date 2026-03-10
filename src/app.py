@@ -1,6 +1,6 @@
 import tkinter as tk
 
-__version__ = "0.2.0"
+__version__ = "0.3.0-beta"
 
 
 class App(tk.Tk):
